@@ -1,4 +1,4 @@
-package index
+package properties
 
 // Reference to indexed item
 type Reference struct {

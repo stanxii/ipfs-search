@@ -2,6 +2,7 @@ package index
 
 import (
 	"context"
+	"github.com/ipfs-search/ipfs-search/index/properties"
 	"gopkg.in/olivere/elastic.v5"
 )
 
@@ -64,10 +65,15 @@ func (index *Index) Get(ctx context.Context, key *Key, fields []string) (*Item, 
 		return nil, err
 	}
 
-	item, err := ItemFromJSON(r.Source)
+	properties, err := properties.FromJSON(r.Source)
 
 	if err != nil {
 		return nil, err
+	}
+
+	item := &Item{
+		Key:        key,
+		Properties: properties,
 	}
 
 	return item, nil
