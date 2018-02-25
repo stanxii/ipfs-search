@@ -10,21 +10,21 @@ import (
 type Metadata map[string]interface{}
 
 type Properties struct {
-	references References `json:"references"`
-	size       uint64     `json:"size"`
-	firstSeen  time.Time  `json:"first-seen"`
-	lastSeen   time.Time  `json:"last-seen"`
+	References References `json:"references"`
+	Size       uint64     `json:"size"`
+	FirstSeen  time.Time  `json:"first-seen"`
+	LastSeen   time.Time  `json:"last-seen"`
 
 	// Directories
-	links []*shell.UnixLsLink `json:"links,omitempty"`
+	Links []*shell.UnixLsLink `json:"links,omitempty"`
 
 	// Files
-	metadata Metadata `json:"metadata,omitempty"`
+	Metadata Metadata `json:"metadata,omitempty"`
 }
 
 func New() *Properties {
 	return &Properties{
-		firstSeen: time.Now().UTC(),
+		FirstSeen: time.Now().UTC(),
 	}
 }
 
@@ -42,8 +42,12 @@ func FromJSON(j *json.RawMessage) (*Properties, error) {
 }
 
 func (p *Properties) UpdateReferences(r *Reference) {
-	if !p.references.Contains(r) {
+	if !p.References.Contains(r) {
 		log.Printf("Adding reference '%v' to %v", r, p)
-		p.references = append(p.references, *r)
+		p.References = append(p.References, *r)
 	}
+}
+
+func (p *Properties) UpdateLastSeen() {
+	p.LastSeen = time.Now().UTC()
 }

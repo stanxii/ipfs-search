@@ -5,8 +5,8 @@ import (
 )
 
 type Key struct {
-	Hash  string
 	Index string
+	Id    string
 	Type  string
 }
 
