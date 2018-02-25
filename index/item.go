@@ -5,8 +5,6 @@ import (
 	"log"
 )
 
-type Properties map[string]interface{}
-
 type Key struct {
 	Hash  string
 	Index string
