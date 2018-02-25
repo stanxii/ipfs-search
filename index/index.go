@@ -1,0 +1,74 @@
+package index
+
+import (
+	"context"
+	"gopkg.in/olivere/elastic.v5"
+)
+
+type Index struct {
+	indexer *Indexer
+	name    string
+}
+
+func (index *Index) Add(ctx context.Context, item *Item) error {
+	_, err := index.indexer.Client.Index().
+		Index(index.name).
+		Type(item.Type).
+		Id(item.Hash).
+		BodyJson(item.Properties).
+		Do(ctx)
+
+	if err != nil {
+		// Handle error
+		return err
+	}
+
+	return nil
+}
+
+func (index *Index) Update(ctx context.Context, item *Item) error {
+	_, err := index.indexer.Client.Update().
+		Index(index.name).
+		Type(item.Type).
+		Id(item.Hash).
+		Doc(item.Properties).
+		Do(ctx)
+
+	if err != nil {
+		// Handle error
+		return err
+	}
+
+	return nil
+}
+
+func (index *Index) Get(ctx context.Context, key *Key, fields []string) (*Item, error) {
+	q := index.indexer.Client.Get().Index(index.name)
+
+	// Conditionally, filter by type
+	if key.Type != "" {
+		q = q.Type(key.Type)
+	}
+
+	// Conditionally, filter fields
+	if fields != nil {
+		fsc := elastic.NewFetchSourceContext(true)
+		fsc.Include(fields...)
+
+		q = q.FetchSourceContext(fsc)
+	}
+
+	r, err := q.Id(key.Hash).Do(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	item, err := ItemFromJSON(r.Source)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item, nil
+}
