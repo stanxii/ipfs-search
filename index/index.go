@@ -7,12 +7,12 @@ import (
 )
 
 type Index struct {
-	indexer *Indexer
-	name    string
+	*Indexer
+	name string
 }
 
 func (index *Index) Add(ctx context.Context, item *Item) error {
-	_, err := index.indexer.Client.Index().
+	_, err := index.Client.Index().
 		Index(index.name).
 		Type(item.Type).
 		Id(item.Hash).
@@ -28,7 +28,7 @@ func (index *Index) Add(ctx context.Context, item *Item) error {
 }
 
 func (index *Index) Update(ctx context.Context, item *Item) error {
-	_, err := index.indexer.Client.Update().
+	_, err := index.Client.Update().
 		Index(index.name).
 		Type(item.Type).
 		Id(item.Hash).
@@ -44,7 +44,7 @@ func (index *Index) Update(ctx context.Context, item *Item) error {
 }
 
 func (index *Index) Get(ctx context.Context, key *Key, fields []string) (*Item, error) {
-	q := index.indexer.Client.Get().Index(index.name)
+	q := index.Client.Get().Index(index.name)
 
 	// Conditionally, filter by type
 	if key.Type != "" {

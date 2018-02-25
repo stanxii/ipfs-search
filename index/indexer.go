@@ -10,7 +10,7 @@ type Indexer struct {
 
 func (i *Indexer) Index(name string) *Index {
 	return &Index{
-		indexer: i,
+		Indexer: i,
 		name:    name,
 	}
 }
