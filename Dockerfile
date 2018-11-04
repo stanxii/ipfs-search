@@ -1,9 +1,10 @@
-FROM golang:latest
+FROM golang:1.11
 
-WORKDIR /go/src/app
+WORKDIR /app
 COPY . .
 
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+RUN go get -d -v ./...
+RUN go install -v ./...
 
-CMD ["go-wrapper", "run", "c"]
+CMD ["crawl"]
+ENTRYPOINT ["ipfs-search"]
