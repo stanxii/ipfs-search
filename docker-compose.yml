@@ -17,7 +17,7 @@ services:
       - 5001:5001
       - 8080:8080
   ipfs-tika:
-    build: provisioning/docker/ipfs-tika
+    build: deployment/docker/ipfs-tika
     ports:
       - 8081:8081
     depends_on:
