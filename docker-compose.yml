@@ -17,11 +17,13 @@ services:
       - 5001:5001
       - 8080:8080
   ipfs-tika:
-    build: deployment/docker/ipfs-tika
+    image: ipfssearch/ipfs-tika
     ports:
       - 8081:8081
     depends_on:
       - ipfs
+    environment:
+      - IPFS_GATEWAY=http://ipfs:8080/
   ipfs-search:
     build: .
     depends_on:
